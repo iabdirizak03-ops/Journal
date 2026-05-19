@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apex Ledger — Premium Trading Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <h1>Apex Ledger</h1>
+        <p class="muted">Premium Trading Journal</p>
+        <nav>
+          <a class="active" href="#">Dashboard</a>
+          <a href="#">Journal</a>
+          <a href="#">Playbook</a>
+          <a href="#">Analytics</a>
+          <a href="#">Risk Center</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="hero card">
+          <div>
+            <span class="tag">Pro Tier</span>
+            <h2>Trade like a fund manager, journal like a quant.</h2>
+            <p>Track every execution, enforce risk rules, and review your edge with live session analytics.</p>
+          </div>
+          <div class="hero-actions">
+            <button id="newTradeBtn">+ Log Trade</button>
+            <button class="ghost" id="resetBtn">Reset Demo</button>
+          </div>
+        </header>
+
+        <section class="grid metrics" id="metrics"></section>
+
+        <section class="grid two-cols">
+          <article class="card">
+            <div class="section-title">
+              <h3>Recent Trades</h3>
+              <span id="tradeCount"></span>
+            </div>
+            <div class="controls">
+              <label>Filter setup
+                <select id="setupFilter"></select>
+              </label>
+              <label>Min R
+                <input id="minRFilter" type="number" step="0.1" value="-99" />
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Market</th>
+                    <th>Setup</th>
+                    <th>Session</th>
+                    <th>Result</th>
+                    <th>R-Multiple</th>
+                  </tr>
+                </thead>
+                <tbody id="tradeRows"></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="card">
+            <h3>Risk Radar</h3>
+            <p id="riskStatus" class="muted"></p>
+            <div class="equity-wrap">
+              <svg id="equityChart" viewBox="0 0 400 140" role="img" aria-label="Equity curve chart"></svg>
+            </div>
+            <h4>Premium Features</h4>
+            <ul class="feature-list" id="features"></ul>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="tradeDialog">
+      <form id="tradeForm" method="dialog" class="dialog-content">
+        <h3>Log New Trade</h3>
+        <label>Date <input required name="date" type="date" /></label>
+        <label>Market <input required name="pair" placeholder="ES, EUR/USD, BTC/USD" /></label>
+        <label>Setup <input required name="setup" placeholder="VWAP Reclaim" /></label>
+        <label>Session
+          <select name="session" required>
+            <option>Asia</option>
+            <option>London</option>
+            <option>New York</option>
+          </select>
+        </label>
+        <label>R-Multiple <input required name="rMultiple" type="number" step="0.1" /></label>
+        <menu>
+          <button value="cancel" class="ghost" type="reset">Cancel</button>
+          <button value="default" type="submit">Save Trade</button>
+        </menu>
+      </form>
+    </dialog>
+
+    <script type="module" src="/main.ts"></script>
+  </body>
+</html>
