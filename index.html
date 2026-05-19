@@ -28,11 +28,12 @@
           <div>
             <span class="tag">Pro Tier</span>
             <h2>Trade like a fund manager, journal like a quant.</h2>
-            <p>
-              Capture executions, tag setups, review screenshots, and uncover edge with institutional-grade analytics.
-            </p>
+            <p>Track every execution, enforce risk rules, and review your edge with live session analytics.</p>
           </div>
-          <button id="newTradeBtn">+ New Trade</button>
+          <div class="hero-actions">
+            <button id="newTradeBtn">+ Log Trade</button>
+            <button class="ghost" id="resetBtn">Reset Demo</button>
+          </div>
         </header>
 
         <section class="grid metrics" id="metrics"></section>
@@ -43,13 +44,22 @@
               <h3>Recent Trades</h3>
               <span id="tradeCount"></span>
             </div>
+            <div class="controls">
+              <label>Filter setup
+                <select id="setupFilter"></select>
+              </label>
+              <label>Min R
+                <input id="minRFilter" type="number" step="0.1" value="-99" />
+              </label>
+            </div>
             <div class="table-wrap">
               <table>
                 <thead>
                   <tr>
                     <th>Date</th>
-                    <th>Pair</th>
+                    <th>Market</th>
                     <th>Setup</th>
+                    <th>Session</th>
                     <th>Result</th>
                     <th>R-Multiple</th>
                   </tr>
@@ -60,12 +70,39 @@
           </article>
 
           <article class="card">
-            <h3>Premium Features</h3>
+            <h3>Risk Radar</h3>
+            <p id="riskStatus" class="muted"></p>
+            <div class="equity-wrap">
+              <svg id="equityChart" viewBox="0 0 400 140" role="img" aria-label="Equity curve chart"></svg>
+            </div>
+            <h4>Premium Features</h4>
             <ul class="feature-list" id="features"></ul>
           </article>
         </section>
       </main>
     </div>
+
+    <dialog id="tradeDialog">
+      <form id="tradeForm" method="dialog" class="dialog-content">
+        <h3>Log New Trade</h3>
+        <label>Date <input required name="date" type="date" /></label>
+        <label>Market <input required name="pair" placeholder="ES, EUR/USD, BTC/USD" /></label>
+        <label>Setup <input required name="setup" placeholder="VWAP Reclaim" /></label>
+        <label>Session
+          <select name="session" required>
+            <option>Asia</option>
+            <option>London</option>
+            <option>New York</option>
+          </select>
+        </label>
+        <label>R-Multiple <input required name="rMultiple" type="number" step="0.1" /></label>
+        <menu>
+          <button value="cancel" class="ghost" type="reset">Cancel</button>
+          <button value="default" type="submit">Save Trade</button>
+        </menu>
+      </form>
+    </dialog>
+
     <script type="module" src="/main.ts"></script>
   </body>
 </html>
