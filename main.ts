@@ -193,3 +193,67 @@ form?.addEventListener('submit', (event) => {
 });
 
 render();
+initNav();
+
+
+function renderAnalyticsPage() {
+  const container = document.querySelector<HTMLElement>('#analyticsSummary');
+  if (!container) return;
+
+  const bySession = trades.reduce<Record<string, { count: number; net: number }>>((acc, trade) => {
+    const key = trade.session;
+    if (!acc[key]) acc[key] = { count: 0, net: 0 };
+    acc[key].count += 1;
+    acc[key].net += trade.rMultiple;
+    return acc;
+  }, {});
+
+  container.innerHTML = Object.entries(bySession)
+    .map(([session, stats]) => `<p><strong>${session}</strong>: ${stats.count} trades, ${stats.net.toFixed(1)}R net</p>`)
+    .join('') || '<p>No trades available yet.</p>';
+}
+
+function renderRiskRules() {
+  const rules = document.querySelector<HTMLElement>('#riskRules');
+  if (!rules) return;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const todayR = trades.filter((trade) => trade.date === today).reduce((acc, t) => acc + t.rMultiple, 0);
+  const lockState = todayR <= -2 ? 'ACTIVE' : 'inactive';
+
+  rules.innerHTML = [
+    `Daily loss lock: ${lockState} (threshold -2.0R)`,
+    'Max 3 correlated positions at one time',
+    'Hard stop must be defined before entry',
+    'Auto-review required after 2 consecutive losses',
+  ].map((item) => `<li>${item}</li>`).join('');
+}
+
+function routeTo(page: string) {
+  document.querySelectorAll<HTMLElement>('.page').forEach((section) => {
+    section.hidden = section.dataset.page !== page;
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('#sideNav a').forEach((link) => {
+    link.classList.toggle('active', link.dataset.page === page);
+  });
+
+  if (page === 'analytics') renderAnalyticsPage();
+  if (page === 'risk') renderRiskRules();
+}
+
+function initNav() {
+  const links = document.querySelectorAll<HTMLAnchorElement>('#sideNav a');
+  links.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const page = link.dataset.page ?? 'dashboard';
+      routeTo(page);
+      history.replaceState(null, '', `#${page}`);
+    });
+  });
+
+  const hashPage = location.hash.replace('#', '');
+  const valid = ['dashboard', 'journal', 'playbook', 'analytics', 'risk'];
+  routeTo(valid.includes(hashPage) ? hashPage : 'dashboard');
+}
